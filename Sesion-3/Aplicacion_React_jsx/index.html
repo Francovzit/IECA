@@ -21,94 +21,60 @@
         completed: false,
         text: text,
       });
-      render();
+      root.render(<App />)
     };
 
     const changeStatus = (item) => {
       item.completed = !item.completed;
-      render();
+      root.render(<App />)
     };
 
     const deleteItem = (item) => {
       const index = items.indexOf(item);
       items.splice(index, 1);
-      render();
+      root.render(<App />)
     };
 
-    const render = () => {
-      const h1 = React.createElement(
-        "h1",
-        {
-          id: "title",
-          className: "x-1",
-          style: {
-            color: "red",
-            backgroundColor: "blue",
-            borderRadius: "5px",
-          },
-        },
-        "Mi primera aplicación React"
+    const ListItem = ({ item }) => {
+      return (
+        <li key={item.key}>
+          <input type="checkbox" checked={item.completed} onChange={() => changeStatus(item)} />
+          <span style={{ textDecoration: item.completed ? "line-through" : "none" }} >{item.text}</span>
+          <button onClick={() => deleteItem(item)}>Eliminar</button>
+        </li>
       );
+    }
 
-      const form = React.createElement("div", null, [
-        React.createElement(
-          "input",
-          { id: "input", type: "text", placeholder: "Nueva tarea", key: "input" },
-          null
-        ),
-        React.createElement(
-          "button",
-          { id: "button", onClick: addItem, key: "button" },
-          "Agregar"
-        ),
-      ]);
+    const List = ({ items }) => {
+      return (
+        <ul>
+          {items.map((item) => (
+            <ListItem item={item} />
+          ))}
+        </ul>
+      )
+    }
 
-      const list = React.createElement(
-        "ul",
-        null,
-        items.map((item) => {
-          return React.createElement("li", { key: item.text }, [
-            React.createElement(
-              "input",
-              {
-                type: "checkbox",
-                key: "checkbox",
-                checked: item.completed,
-                onChange: () => {
-                  changeStatus(item);
-                },
-              },
-              null
-            ),
-            React.createElement(
-              "span",
-              {
-                key: "text",
-                style: {
-                  textDecoration: item.completed ? "line-through" : "none",
-                },
-              },
-              item.text
-            ),
-            React.createElement(
-              "button",
-              {
-                key: "button-delete",
-                onClick: () => {
-                  deleteItem(item);
-                },
-              },
-              "Eliminar"
-            ),
-          ]);
-        })
-      );
+    const Form = () => {
+      return (
+        <div>
+          <input type="text" id="input" placeholder="Nueva tarea" />
+          <button onClick={addItem}>Agregar</button>
+        </div>
+      )
+    }
 
-      root.render([h1, form, list]);
-    };
+    const App = () => {
+      return (
+        <div>
+          <h1>Mi primera app con JSX</h1>
+          <Form />
+          <List items={items} />
+        </div>
+      )
+    }
 
-    render();
-
+    root.render(<App />)
   </script>
 </body>
 
